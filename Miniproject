@@ -1,0 +1,75 @@
+package maven;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class PetStoreProject {
+		static WebDriver driver;
+		
+	    static String url = "https://petstore.octoperf.com/actions/Catalog.action";
+	    static String dogs_xpath = "//div [@id ='SidebarContent']/a[2]";
+	    static String Product_xpath = "//a[text()='K9-RT-01']";
+	   static  String Addtocart_css = ".Button";
+	   static String Qty_txt_css = "input[name='EST-28']";
+	   static String update_xpath = "//input[@name='updateCartQuantities']";
+		static String proceed_checkout_xpath = "//a[text()='Proceed to Checkout']";
+		
+		public static void verifyURL(String partOfURL,String page) {
+			String actURL = driver.getCurrentUrl();
+			if(actURL.contains(partOfURL)) {
+				System.out.println(page + ": Pass");
+			}else {
+				System.out.println(page + ": Fail");
+			}
+		}
+		
+		public static void setUp() {
+			driver = new ChromeDriver();
+			driver.get(url);
+		}
+		
+		public static void selectBird() {
+			driver.findElement(By.xpath(dogs_xpath)).click();
+			verifyURL("categoryId=DOGS","HomePage");
+		}
+		
+		public static void selectProduct() {
+			driver.findElement(By.xpath(Product_xpath)).click();
+			verifyURL("K9-RT-01","Product");
+		}
+		
+		public static void addToCart() {
+			driver.findElement(By.cssSelector(Addtocart_css)).click();
+			verifyURL("EST-28","Addtocart");
+		}
+		
+		public static void updateCart() {
+			driver.findElement(By.cssSelector(Qty_txt_css)).clear();
+			driver.findElement(By.cssSelector(Qty_txt_css)).sendKeys("9");
+			driver.findElement(By.xpath(update_xpath)).click();
+			verifyURL("EST-28","Updatecart");
+		}
+		
+		public static void checkout() {
+			driver.findElement(By.xpath(proceed_checkout_xpath)).click();
+			verifyURL("newOrderForm=","Checkout");
+		}
+		
+		public static void tearDown() {
+			driver.quit();
+		}
+
+	public static void main(String[] args) {
+		setUp();
+		selectBird();
+		selectProduct();
+		addToCart();
+		updateCart();
+		checkout();
+        tearDown();
+		
+
+	}
+
+}
