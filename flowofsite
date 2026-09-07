@@ -1,0 +1,107 @@
+package maven;
+
+import java.time.Duration;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class AddToCart {
+	static WebDriver driver;
+	
+	static String url = "https://www.demoblaze.com/index.html";
+    static String home_xpath = "//a[text()[contains(.,'Home')]]";
+    static String Product_xpath = "//a[text()='Samsung galaxy s6']";
+   static  String Addtocart_css = "a.btn.btn-success.btn-lg";
+   static String cart_xpath="//a[text()='Cart']";
+   static String order_css="a.btn btn-success";
+   static String placeorder_xpath="//button[text()='Place Order']";
+   static String name="input[id='name']";
+   static String country="input[id='country']";
+   static String city="input[id='city']";
+   static String credit="input[id='card']";
+   static String month="input[id='month']";
+   static String year="input[id='year']";
+   static String purchase="//button[(text()='Purchase' )]";
+
+	public static void verifyUrl(String partOfUrl,String page) {
+		String actUrl=driver.getCurrentUrl();
+		if(actUrl.contains(partOfUrl)) {
+			System.out.println(page+ " :pass ");
+		}else {
+			System.out.println(page+ " :Fail ");
+		}
+	}
+		
+	public static void setUp() {
+		driver = new ChromeDriver();
+		driver.get(url);
+	}
+	public static void home() {
+		driver.findElement(By.xpath(home_xpath)).click();
+		verifyUrl("index.html","HomePage");
+	}
+	public static void product() {
+		 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.elementToBeClickable(
+		        By.xpath(Product_xpath)
+		    )).click();
+		
+		verifyUrl("prod.html?idp_=1","Product");
+	}
+	public static void addToCart() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(
+	        ExpectedConditions.elementToBeClickable(
+	            By.cssSelector(Addtocart_css))).click();
+		verifyUrl("prod.html?idp_=1#","addToCart");
+	}
+	public static void alert() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+	    System.out.println(alert.getText());
+	    alert.accept();
+	}
+	public static void cart() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(
+	        ExpectedConditions.elementToBeClickable(
+	            By.xpath(cart_xpath))).click();
+		verifyUrl("prod.html?idp_=1#","addToCart");
+	}
+	public static void order() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(
+	        ExpectedConditions.elementToBeClickable(
+	            By.xpath(placeorder_xpath))).click();
+		verifyUrl("cart.html","place order");
+		
+		
+	}
+	public static void sendkeys() {
+		driver.findElement(By.cssSelector(name)).sendKeys("skr");
+		driver.findElement(By.cssSelector(country)).sendKeys("india");
+		driver.findElement(By.cssSelector(city)).sendKeys("chennai");
+		driver.findElement(By.cssSelector(credit)).sendKeys("yes");
+		driver.findElement(By.cssSelector(month)).sendKeys("december");
+		driver.findElement(By.cssSelector(year)).sendKeys("2026");
+		
+	}
+		
+	public static void main(String[] args) {
+		setUp();
+		home();
+		product();
+		addToCart();
+		alert();
+		cart();
+		order();
+		
+
+	}
+
+}
